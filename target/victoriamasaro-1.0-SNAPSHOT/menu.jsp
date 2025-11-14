@@ -174,7 +174,7 @@
                     <a href="${pageContext.request.contextPath}${URL_BASE}/FuncionarioControlador?opcao=cancelar" data-icon="🍳">Funcionário</a>
                     <a href="${pageContext.request.contextPath}${URL_BASE}/EntregaControlador?opcao=cancelar" data-icon="🚚">Entregas</a>
                     <a href="${pageContext.request.contextPath}${URL_BASE}/FornecedorControlador?opcao=cancelar" data-icon="🏭">Fornecedor</a>
-                    <a href="${pageContext.request.contextPath}/Relatorios.jsp" data-icon="�">Relatórios</a>
+                    <a href="${pageContext.request.contextPath}/Relatorios.jsp" data-icon="📊">Relatórios</a>
                 </div>
                 
                 <div class="user-info">
@@ -188,6 +188,16 @@
                 </div>
             </nav>
         </div>
+
+        <%-- Mensagem de boas-vindas exibida apenas no primeiro acesso --%>
+        <c:if test="${empty ocultarBoasVindas}">
+            <div class="content">
+                <div class="welcome-box">
+                    <h1>🎉 SEJA BEM-VINDO, ${sessionScope.usuarioLogado.nome}! 🎉</h1>
+                    <p>APROVEITE OS RECURSOS DE CONTROLE E CADASTRO DISPONÍVEIS</p>
+                </div>
+            </div>
+        </c:if>
     </div>
 </body>
 </html>
