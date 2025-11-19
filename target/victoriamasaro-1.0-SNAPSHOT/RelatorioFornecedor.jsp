@@ -307,7 +307,7 @@
                                     <tr>
                                         <td>${fornecedor.codFornecedor}</td>
                                         <td>${fornecedor.nome}</td>
-                                        <td>${fornecedor.cnpj}</td>
+                                        <td class="cnpj-field">${fornecedor.cnpj}</td>
                                         <td>${fornecedor.telefone}</td>
                                         <td>${fornecedor.endereco}</td>
                                     </tr>
@@ -328,6 +328,24 @@
     </div>
 
     <script>
+        // Função para formatar CNPJ
+        function formatarCNPJ(cnpj) {
+            if (!cnpj) return '';
+            cnpj = cnpj.replace(/\D/g, '');
+            if (cnpj.length === 14) {
+                return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+            }
+            return cnpj;
+        }
+        
+        // Aplicar formatação de CNPJ nas células da tabela
+        document.addEventListener('DOMContentLoaded', function() {
+            const cnpjCells = document.querySelectorAll('.cnpj-field');
+            cnpjCells.forEach(cell => {
+                cell.textContent = formatarCNPJ(cell.textContent);
+            });
+        });
+        
         // Máscara para CNPJ
         document.getElementById('cnpj').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');

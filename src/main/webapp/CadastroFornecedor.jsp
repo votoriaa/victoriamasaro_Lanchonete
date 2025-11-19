@@ -48,7 +48,7 @@
                     </div>
                     <div>
                         <label>CNPJ:</label>
-                        <input type="text" name="cnpj" value="${cnpj}" required>
+                        <input type="text" id="cnpj" name="cnpj" value="${cnpj}" required maxlength="18" placeholder="00.000.000/0001-00">
                     </div>
                     <div>
                         <label>Telefone:</label>
@@ -85,7 +85,7 @@
                         <tr>
                             <td>${fornecedor.codFornecedor}</td>
                             <td>${fornecedor.nome}</td>
-                            <td>${fornecedor.cnpj}</td>
+                            <td class="cnpj-field">${fornecedor.cnpj}</td>
                             <td>${fornecedor.telefone}</td>
                             <td>${fornecedor.endereco}</td>
                             <td>
@@ -102,5 +102,37 @@
             </table>
         </div>
     </div>
+    
+    <script>
+        // Função para formatar CNPJ
+        function formatarCNPJ(cnpj) {
+            if (!cnpj) return '';
+            cnpj = cnpj.replace(/\D/g, '');
+            if (cnpj.length === 14) {
+                return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+            }
+            return cnpj;
+        }
+        
+        // Aplicar formatação de CNPJ nas células da tabela
+        document.addEventListener('DOMContentLoaded', function() {
+            const cnpjCells = document.querySelectorAll('.cnpj-field');
+            cnpjCells.forEach(cell => {
+                cell.textContent = formatarCNPJ(cell.textContent);
+            });
+        });
+        
+        // Máscara de CNPJ
+        document.getElementById('cnpj').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 14) {
+                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            }
+            e.target.value = value;
+        });
+    </script>
 </body>
 </html>

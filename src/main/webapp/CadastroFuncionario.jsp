@@ -212,6 +212,47 @@
                 campo.value = valor.replace(/[^0-9.,]/g, '');
             }
         }
+
+        // Função para buscar e preencher automaticamente o salário do cargo selecionado
+        function buscarSalarioCargo() {
+            var codCargo = document.getElementById('codCargo').value;
+            var salarioField = document.getElementById('salarioAtualFuncionario');
+            
+            // Se nenhum cargo foi selecionado, limpa o campo de salário
+            if (!codCargo || codCargo === '') {
+                salarioField.value = '';
+                return;
+            }
+
+            // Faz a requisição AJAX para buscar o salário inicial do cargo
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '${pageContext.request.contextPath}${URL_BASE}/BuscarSalarioCargoControlador?codCargo=' + codCargo, true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.salarioInicial !== undefined) {
+                            // Preenche o campo de salário com o valor do cargo
+                            salarioField.value = response.salarioInicial;
+                        } else if (response.erro) {
+                            console.error('Erro ao buscar salário:', response.erro);
+                            salarioField.value = '';
+                        }
+                    } catch (e) {
+                        console.error('Erro ao processar resposta:', e);
+                        salarioField.value = '';
+                    }
+                }
+            };
+            
+            xhr.onerror = function() {
+                console.error('Erro na requisição AJAX');
+                salarioField.value = '';
+            };
+            
+            xhr.send();
+        }
     </script>
 </head>
 <body>
@@ -249,7 +290,7 @@
 
             <div class="form-group">
                 <label for="salarioAtualFuncionario">Salário Atual:</label>
-                <input type="text" id="salarioAtualFuncionario" name="salarioAtualFuncionario" required value="${salarioAtualFuncionario}" oninput="validarNumero(this)">
+                <input type="text" id="salarioAtualFuncionario" name="salarioAtualFuncionario" required value="${salarioAtualFuncionario}" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
             </div>
 
             <div class="form-group">
@@ -259,7 +300,7 @@
 
             <div class="form-group">
                 <label for="codCargo">Cargo:</label>
-                <select id="codCargo" name="codCargo" required>
+                <select id="codCargo" name="codCargo" required onchange="buscarSalarioCargo()">
                     <option value="">Selecione</option>
                     <c:forEach var="cargo" items="${listaCargo}">
                         <option value="${cargo.codCargo}" ${cargo.codCargo == codCargo ? 'selected' : ''}>${cargo.nome}</option>
@@ -296,7 +337,7 @@
                                 <td>${func.codFuncionario}</td>
                                 <td>${func.nome}</td>
                                 <td>${func.carTrab}</td>
-                                <td>${func.cpf}</td>
+                                <td class="cpf-field">${func.cpf}</td>
                                 <td>${func.email}</td>
                                 <td>${func.salarioAtual}</td>
                                 <td>${func.dataAdmissao}</td>
@@ -337,5 +378,26 @@
         </c:if>
     </div>
 </div>
+
+<script>
+    // Função para formatar CPF
+    function formatarCPF(cpf) {
+        if (!cpf) return '';
+        cpf = cpf.replace(/\D/g, '');
+        if (cpf.length === 11) {
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+        return cpf;
+    }
+    
+    // Aplicar formatação de CPF nas células da tabela
+    document.addEventListener('DOMContentLoaded', function() {
+        const cpfCells = document.querySelectorAll('.cpf-field');
+        cpfCells.forEach(cell => {
+            cell.textContent = formatarCPF(cell.textContent);
+        });
+    });
+</script>
+
 </body>
 </html>

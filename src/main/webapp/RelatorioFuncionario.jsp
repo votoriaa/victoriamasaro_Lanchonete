@@ -295,7 +295,7 @@
                                 <tr>
                                     <td>${func.codFuncionario}</td>
                                     <td>${func.nome}</td>
-                                    <td>${func.cpf}</td>
+                                    <td class="cpf-field">${func.cpf}</td>
                                     <td>${func.email}</td>
                                     <td>${func.objCargo.nome}</td>
                                     <td>
@@ -314,6 +314,24 @@
     </div>
 
     <script>
+        // Função para formatar CPF
+        function formatarCPF(cpf) {
+            if (!cpf) return '';
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length === 11) {
+                return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            }
+            return cpf;
+        }
+        
+        // Aplicar formatação de CPF nas células da tabela
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpfCells = document.querySelectorAll('.cpf-field');
+            cpfCells.forEach(cell => {
+                cell.textContent = formatarCPF(cell.textContent);
+            });
+        });
+        
         // Máscara de CPF
         document.getElementById('cpf').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');

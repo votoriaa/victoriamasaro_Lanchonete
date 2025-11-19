@@ -107,6 +107,15 @@
             background-color: #218838;
         }
         
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
         .info-banner {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -135,7 +144,7 @@
         
         <div class="info-banner">
             <h2>Central de Relatórios</h2>
-            <p>Visualize e exporte dados do sistema em formato Excel (XLSX)</p>
+            <p>Visualize e exporte dados do sistema em formato Excel (XLSX) ou PDF</p>
         </div>
         
         <div class="relatorios-grid">
@@ -153,6 +162,9 @@
                     </a>
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioClienteExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
+                    </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioClientePdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
                     </a>
                 </div>
             </div>
@@ -172,6 +184,9 @@
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioProdutoExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
                     </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioProdutoPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
+                    </a>
                 </div>
             </div>
             
@@ -189,6 +204,9 @@
                     </a>
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioVendaExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
+                    </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioVendaPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
                     </a>
                 </div>
             </div>
@@ -208,6 +226,9 @@
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioFornecedorExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
                     </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioFornecedorPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
+                    </a>
                 </div>
             </div>
             
@@ -225,6 +246,9 @@
                     </a>
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioFuncionarioExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
+                    </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioFuncionarioPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
                     </a>
                 </div>
             </div>
@@ -244,6 +268,9 @@
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioEntregaExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
                     </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioEntregaPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
+                    </a>
                 </div>
             </div>
             
@@ -261,6 +288,9 @@
                     </a>
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioCargoExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
+                    </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioCargoPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
                     </a>
                 </div>
             </div>
@@ -280,6 +310,9 @@
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioCategoriaExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
                     </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioCategoriaPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
+                    </a>
                 </div>
             </div>
             
@@ -298,6 +331,9 @@
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioPerformanceFuncionarioExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
                     </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioPerformanceFuncionarioPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
+                    </a>
                 </div>
             </div>
             
@@ -315,6 +351,9 @@
                     </a>
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioEstoqueCriticoExcelControlador" class="btn btn-success">
                         📗 Exportar Excel
+                    </a>
+                    <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioEstoqueCriticoPdfControlador" class="btn btn-danger">
+                        📕 Exportar PDF
                     </a>
                 </div>
             </div>

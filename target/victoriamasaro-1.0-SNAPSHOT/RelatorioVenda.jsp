@@ -65,6 +65,54 @@
         .table-wrapper { overflow-x: auto; }
         .empty-state { text-align: center; padding: 40px; color: #999; }
         .empty-state-icon { font-size: 48px; margin-bottom: 10px; }
+        .btn-ver-itens {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-ver-itens:hover {
+            background-color: #138496;
+        }
+        .itens-venda {
+            background-color: #f8f9fa !important;
+        }
+        .itens-container {
+            padding: 15px;
+            background-color: white;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .itens-container h4 {
+            color: #E25822;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .itens-table {
+            width: 100%;
+            background-color: white;
+        }
+        .itens-table thead {
+            background-color: #6c757d;
+        }
+        .itens-table th {
+            padding: 8px;
+            font-size: 13px;
+        }
+        .itens-table td {
+            padding: 8px;
+            font-size: 13px;
+        }
+        .total-row {
+            background-color: #fff3e6 !important;
+            border-top: 2px solid #E25822;
+        }
+        .total-row:hover {
+            background-color: #fff3e6 !important;
+        }
         @media print {
             .no-print { display: none !important; }
             body { background-color: white; }
@@ -157,6 +205,7 @@
                                     <th>Cliente</th>
                                     <th>CPF Cliente</th>
                                     <th>Funcionário</th>
+                                    <th>Itens</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,8 +215,49 @@
                                         <td>${venda.dataHora}</td>
                                         <td>${venda.tipoPagamento}</td>
                                         <td>${venda.codCliente.nome}</td>
-                                        <td>${venda.codCliente.cpf}</td>
+                                        <td class="cpf-field">${venda.codCliente.cpf}</td>
                                         <td>${venda.codFuncionario.nome}</td>
+                                        <td>
+                                            <button class="btn-ver-itens" onclick="toggleItens(${venda.codVenda})">
+                                                Ver Itens 👁️
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr id="itens-${venda.codVenda}" class="itens-venda" style="display:none;">
+                                        <td colspan="7">
+                                            <div class="itens-container">
+                                                <h4>🛒 Itens da Venda #${venda.codVenda}</h4>
+                                                <table class="itens-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Produto</th>
+                                                            <th>Quantidade</th>
+                                                            <th>Preço Unitário</th>
+                                                            <th>Subtotal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <c:set var="totalVenda" value="0" />
+                                                        <c:forEach var="item" items="${mapaItensVenda[venda.codVenda]}">
+                                                            <c:set var="subtotal" value="${item.quantVenda * item.precoUnitario}" />
+                                                            <c:set var="totalVenda" value="${totalVenda + subtotal}" />
+                                                            <tr>
+                                                                <td>${item.objProduto.nome}</td>
+                                                                <td>${item.quantVenda}</td>
+                                                                <td><fmt:formatNumber value="${item.precoUnitario}" type="currency" currencySymbol="R$" /></td>
+                                                                <td><fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="R$" /></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                        <tr class="total-row">
+                                                            <td colspan="3" style="text-align: right; font-weight: bold; font-size: 15px;">💰 TOTAL DA VENDA:</td>
+                                                            <td style="font-weight: bold; font-size: 15px; color: #E25822;">
+                                                                <fmt:formatNumber value="${totalVenda}" type="currency" currencySymbol="R$" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </c:forEach>
                             </tbody>
@@ -186,6 +276,15 @@
     </div>
 
     <script>
+        function toggleItens(codVenda) {
+            const row = document.getElementById('itens-' + codVenda);
+            if (row.style.display === 'none') {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+        
         function gerarExcel() {
             const dataInicio = document.getElementById('dataInicio').value;
             const dataFim = document.getElementById('dataFim').value;
@@ -203,6 +302,24 @@
             url += params.join('&');
             window.open(url, '_blank');
         }
+        
+        // Função para formatar CPF
+        function formatarCPF(cpf) {
+            if (!cpf) return '';
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length === 11) {
+                return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            }
+            return cpf;
+        }
+        
+        // Aplicar formatação de CPF nas células da tabela
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpfCells = document.querySelectorAll('.cpf-field');
+            cpfCells.forEach(cell => {
+                cell.textContent = formatarCPF(cell.textContent);
+            });
+        });
     </script>
 </body>
 </html>

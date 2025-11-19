@@ -184,6 +184,45 @@
             }
         }
     </style>
+    
+    <script>
+        // Função para buscar e preencher automaticamente o endereço do cliente selecionado
+        function buscarEnderecoCliente() {
+            var codCliente = document.getElementById('codCliente').value;
+            var enderecoField = document.getElementById('endereco');
+            
+            // Se nenhum cliente foi selecionado, não faz nada
+            if (!codCliente || codCliente === '') {
+                return;
+            }
+
+            // Faz a requisição AJAX para buscar o endereço do cliente
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '${pageContext.request.contextPath}${URL_BASE}/BuscarEnderecoClienteControlador?codCliente=' + codCliente, true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.endereco !== undefined) {
+                            // Preenche o campo de endereço com o valor do cliente
+                            enderecoField.value = response.endereco;
+                        } else if (response.erro) {
+                            console.error('Erro ao buscar endereço:', response.erro);
+                        }
+                    } catch (e) {
+                        console.error('Erro ao processar resposta:', e);
+                    }
+                }
+            };
+            
+            xhr.onerror = function() {
+                console.error('Erro na requisição AJAX');
+            };
+            
+            xhr.send();
+        }
+    </script>
 </head>
 <body>
 <div class="page-container">
@@ -210,7 +249,7 @@
 
             <div class="form-group">
                 <label for="codCliente">Cliente:</label>
-                <select id="codCliente" name="codCliente" required>
+                <select id="codCliente" name="codCliente" required onchange="buscarEnderecoCliente()">
                     <option value="">Selecione</option>
                     <c:forEach var="cliente" items="${listaClientes}">
                         <option value="${cliente.codCliente}" ${cliente.codCliente == codCliente ? 'selected' : ''}>${cliente.nome}</option>

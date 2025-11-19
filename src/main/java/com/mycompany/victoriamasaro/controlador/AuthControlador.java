@@ -89,6 +89,7 @@ public class AuthControlador extends HttpServlet {
             Usuario usuario = objUsuarioDao.buscarUsuarioPorEmail(email);
             HttpSession session = req.getSession();
             session.setAttribute("usuarioLogado", usuario);
+            session.setAttribute("exibirBoasVindas", true); // Flag para mostrar mensagem apenas após login
             session.setMaxInactiveInterval(30 * 60); // 30 minutos
             
             // Redireciona para o menu principal

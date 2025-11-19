@@ -115,7 +115,7 @@
                         <tr>
                             <td>${cliente.codCliente}</td>
                             <td>${cliente.nome}</td>
-                            <td>${cliente.cpf}</td>
+                            <td class="cpf-field">${cliente.cpf}</td>
                             <td><fmt:formatDate value="${cliente.dataNascimento}" pattern="dd/MM/yyyy"/></td>
                             <td>${cliente.telefone}</td>
                             <td>${cliente.cidade}-${cliente.uf}</td>
@@ -134,5 +134,36 @@
             </table>
         </div>
     </div>
+    
+    <script>
+        // Função para formatar CPF
+        function formatarCPF(cpf) {
+            if (!cpf) return '';
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length === 11) {
+                return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            }
+            return cpf;
+        }
+        
+        // Aplicar formatação de CPF nas células da tabela
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpfCells = document.querySelectorAll('.cpf-field');
+            cpfCells.forEach(cell => {
+                cell.textContent = formatarCPF(cell.textContent);
+            });
+        });
+        
+        // Máscara de CPF
+        document.getElementById('cpf').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            }
+            e.target.value = value;
+        });
+    </script>
 </body>
 </html>

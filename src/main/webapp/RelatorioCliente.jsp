@@ -125,6 +125,15 @@
             background-color: #138496; 
         }
         
+        .btn-danger { 
+            background-color: #dc3545; 
+            color: white; 
+        }
+        
+        .btn-danger:hover { 
+            background-color: #c82333; 
+        }
+        
         .info-box { 
             background-color: #e7f3ff; 
             border-left: 4px solid #2196F3; 
@@ -273,6 +282,7 @@
                     <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
                     <a href="${pageContext.request.contextPath}${URL_BASE}/RelatorioClienteControlador" class="btn btn-secondary">🔄 Limpar Filtros</a>
                     <button type="button" class="btn btn-success" onclick="gerarExcel()">📗 Exportar Excel</button>
+                    <button type="button" class="btn btn-danger" onclick="gerarPdf()">📕 Exportar PDF</button>
                     <button type="button" class="btn btn-print" onclick="window.print()">🖨️ Imprimir</button>
                 </div>
             </form>
@@ -324,7 +334,7 @@
                                     <tr>
                                         <td>${cliente.codCliente}</td>
                                         <td>${cliente.nome}</td>
-                                        <td>${cliente.cpf}</td>
+                                        <td class="cpf-field">${cliente.cpf}</td>
                                         <td>${cliente.email}</td>
                                         <td>
                                             <fmt:formatDate value="${cliente.dataNascimento}" pattern="dd/MM/yyyy"/>
@@ -353,6 +363,24 @@
     </div>
 
     <script>
+        // Função para formatar CPF
+        function formatarCPF(cpf) {
+            if (!cpf) return '';
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length === 11) {
+                return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            }
+            return cpf;
+        }
+        
+        // Aplicar formatação de CPF nas células da tabela
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpfCells = document.querySelectorAll('.cpf-field');
+            cpfCells.forEach(cell => {
+                cell.textContent = formatarCPF(cell.textContent);
+            });
+        });
+        
         // Máscara para CPF
         document.getElementById('cpf').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
@@ -388,6 +416,28 @@
             url += params.join('&');
             
             // Abre o Excel em uma nova aba (vai fazer download automático)
+            window.open(url, '_blank');
+        }
+        
+        // Função para gerar PDF com os mesmos filtros aplicados
+        function gerarPdf() {
+            const nome = document.getElementById('nome').value;
+            const cpf = document.getElementById('cpf').value;
+            const cidade = document.getElementById('cidade').value;
+            const uf = document.getElementById('uf').value;
+            
+            // Monta a URL com os parâmetros
+            let url = '${pageContext.request.contextPath}${URL_BASE}/RelatorioClientePdfControlador?';
+            let params = [];
+            
+            if (nome) params.push('nome=' + encodeURIComponent(nome));
+            if (cpf) params.push('cpf=' + encodeURIComponent(cpf));
+            if (cidade) params.push('cidade=' + encodeURIComponent(cidade));
+            if (uf) params.push('uf=' + encodeURIComponent(uf));
+            
+            url += params.join('&');
+            
+            // Abre o PDF em uma nova aba (vai fazer download automático)
             window.open(url, '_blank');
         }
     </script>

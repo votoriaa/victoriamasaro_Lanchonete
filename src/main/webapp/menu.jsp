@@ -6,9 +6,6 @@
     <c:redirect url="${pageContext.request.contextPath}/com/mycompany/victoriamasaro/controlador/AuthControlador?opcao=exibirLogin" />
 </c:if>
 
-<c:if test="${not empty param.opcao}">
-    <c:set var="ocultarBoasVindas" value="true" scope="request" />
-</c:if>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -189,14 +186,16 @@
             </nav>
         </div>
 
-        <%-- Mensagem de boas-vindas exibida apenas no primeiro acesso --%>
-        <c:if test="${empty ocultarBoasVindas}">
+        <%-- Mensagem de boas-vindas exibida apenas após login --%>
+        <c:if test="${not empty sessionScope.exibirBoasVindas and sessionScope.exibirBoasVindas}">
             <div class="content">
                 <div class="welcome-box">
                     <h1>🎉 SEJA BEM-VINDO, ${sessionScope.usuarioLogado.nome}! 🎉</h1>
                     <p>APROVEITE OS RECURSOS DE CONTROLE E CADASTRO DISPONÍVEIS</p>
                 </div>
             </div>
+            <%-- Remove o flag após exibir a mensagem --%>
+            <c:remove var="exibirBoasVindas" scope="session" />
         </c:if>
     </div>
 </body>

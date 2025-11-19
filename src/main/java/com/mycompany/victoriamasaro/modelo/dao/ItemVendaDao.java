@@ -9,22 +9,22 @@ import java.util.List;
 
 /**
  * DAO para a entidade ItemVenda.
- * Realiza as operações de CRUD na tabela 'item_venda'.
+ * Realiza as operaÃƒÂ§ÃƒÂµes de CRUD na tabela 'item_venda'.
  */
 public class ItemVendaDao extends GenericoDAO<ItemVenda> {
 
     public void salvar(ItemVenda objItemVenda) {
-        // O campo valorVenda na tabela não está sendo usado aqui, mas poderia ser adicionado
+        // O campo valorVenda na tabela nÃƒÂ£o estÃƒÂ¡ sendo usado aqui, mas poderia ser adicionado
         String sql = "INSERT INTO item_venda(quantVenda, produto_codProduto, venda_codVenda, valorVenda) VALUES(?,?,?,?)";
         save(sql,
              objItemVenda.getQuantVenda(),
              objItemVenda.getObjProduto().getCodProduto(),
              objItemVenda.getObjVenda().getCodVenda(),
-             objItemVenda.getPrecoUnitario()); // Salvando o preço do momento
+             objItemVenda.getPrecoUnitario()); // Salvando o preÃƒÂ§o do momento
     }
 
-    // Métodos alterar e excluir podem ser implementados se houver necessidade de editar vendas já finalizadas.
-    // Por ora, o foco é no processo de nova venda.
+    // MÃƒÂ©todos alterar e excluir podem ser implementados se houver necessidade de editar vendas jÃƒÂ¡ finalizadas.
+    // Por ora, o foco ÃƒÂ© no processo de nova venda.
 
     private static class ItemVendaRowMapper implements RowMapper<ItemVenda> {
         private final ProdutoDao produtoDao = new ProdutoDao();
@@ -52,5 +52,10 @@ public class ItemVendaDao extends GenericoDAO<ItemVenda> {
     public ItemVenda buscarItemVendaPorId(int id) {
         String sql = "SELECT * FROM item_venda WHERE codItemVenda=?";
         return buscarPorId(sql, new ItemVendaRowMapper(), id);
+    }
+    
+    public List<ItemVenda> buscarItensPorVenda(int codVenda) {
+        String sql = "SELECT * FROM item_venda WHERE venda_codVenda=" + codVenda;
+        return buscarTodos(sql, new ItemVendaRowMapper());
     }
 }
